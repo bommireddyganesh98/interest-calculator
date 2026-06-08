@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interest Calculator Pro</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💰 Interest Calculator Pro</h1>
+            <p class="subtitle">Calculate Simple & Compound Interest Easily</p>
+        </header>
+
+        <!-- Error Alert -->
+        <div id="errorAlert" class="alert alert-error" role="alert" aria-live="polite">
+            <span id="errorMessage"></span>
+            <button class="close-btn" onclick="closeAlert()">&times;</button>
+        </div>
+
+        <!-- Main Form -->
+        <form id="calculatorForm" onsubmit="calculate(event)">
+            <fieldset>
+                <legend>Interest Calculator Inputs</legend>
+
+                <div class="form-group">
+                    <label for="principal">Principal Amount (₹)</label>
+                    <input 
+                        type="number" 
+                        id="principal" 
+                        placeholder="Enter principal amount"
+                        step="0.01"
+                        min="0"
+                        required
+                        aria-required="true"
+                        aria-describedby="principalHelp"
+                    >
+                    <small id="principalHelp" class="help-text">Initial amount you want to invest</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="rate">Annual Rate of Interest (%)</label>
+                    <input 
+                        type="number" 
+                        id="rate" 
+                        placeholder="Enter annual interest rate"
+                        step="0.01"
+                        min="0"
+                        max="100"
+                        required
+                        aria-required="true"
+                        aria-describedby="rateHelp"
+                    >
+                    <small id="rateHelp" class="help-text">Interest rate per annum as percentage</small>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="startDate">Start Date</label>
+                        <input 
+                            type="date" 
+                            id="startDate"
+                            required
+                            aria-required="true"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="endDate">End Date (Optional)</label>
+                        <input 
+                            type="date" 
+                            id="endDate"
+                            aria-describedby="endDateHelp"
+                        >
+                        <small id="endDateHelp" class="help-text">Leave blank for today</small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="interestType">Interest Type</label>
+                    <select id="interestType" aria-describedby="interestTypeHelp">
+                        <option value="simple">Simple Interest</option>
+                        <option value="compound">Compound Interest (Annual)</option>
+                        <option value="compound-monthly">Compound Interest (Monthly)</option>
+                        <option value="compound-quarterly">Compound Interest (Quarterly)</option>
+                    </select>
+                    <small id="interestTypeHelp" class="help-text">Select calculation method</small>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Calculate Interest</button>
+            </fieldset>
+        </form>
+
+        <!-- Results Section -->
+        <div class="result" id="resultSection" role="region" aria-live="polite" aria-label="Calculation Results">
+            <h2>Calculation Results</h2>
+            
+            <div class="results-grid">
+                <div class="result-card">
+                    <span class="result-label">Duration</span>
+                    <p id="duration" class="result-value">-</p>
+                </div>
+
+                <div class="result-card">
+                    <span class="result-label">Interest Earned</span>
+                    <p id="interest" class="result-value">-</p>
+                </div>
+
+                <div class="result-card highlight">
+                    <span class="result-label">Total Amount</span>
+                    <p id="total" class="result-value">-</p>
+                </div>
+            </div>
+
+            <div class="result-details">
+                <p><strong>Interest Type:</strong> <span id="typeDisplay">-</span></p>
+                <p><strong>Principal:</strong> ₹<span id="principalDisplay">-</span></p>
+                <p><strong>Rate:</strong> <span id="rateDisplay">-</span>% p.a.</p>
+            </div>
+
+            <div class="actions">
+                <button class="btn btn-secondary" onclick="exportCSV()">📥 Export CSV</button>
+                <button class="btn btn-secondary" onclick="exportPDF()">📄 Export PDF</button>
+                <button class="btn btn-secondary" onclick="printResults()">🖨️ Print</button>
+                <button class="btn btn-secondary" onclick="addToHistory()">📋 Add to History</button>
+            </div>
+        </div>
+
+        <!-- History Section -->
+        <div class="history-section" id="historySection">
+            <h2>Calculation History</h2>
+            <div id="historyList" class="history-list"></div>
+            <button class="btn btn-danger" onclick="clearHistory()" style="display:none;" id="clearHistoryBtn">Clear History</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
