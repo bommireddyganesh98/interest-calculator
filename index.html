@@ -6,18 +6,20 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>వడ్డీ కాలిక్యులేటర ప్రో</title>
+<title>Interest Calculator Pro | వడ్డీ కాలిక్యులేటర</title>
 <style>
 body{font-family:Arial,sans-serif;background:linear-gradient(135deg,#667eea,#764ba2);padding:20px;margin:0}
 .container{max-width:600px;margin:auto;background:#fff;padding:25px;border-radius:15px;box-shadow:0 10px 30px rgba(0,0,0,0.2)}
-label{display:block;margin-top:15px;margin-bottom:5px;font-weight:bold;color:#333;font-size:1.05em}
+label{display:block;margin-top:15px;margin-bottom:5px;font-weight:bold;color:#333;font-size:1.05em;line-height:1.4}
+.label-en{color:#667eea;font-size:0.95em;font-weight:bold}
+.label-te{color:#764ba2;font-size:0.95em;font-weight:bold}
 input,button{width:100%;padding:12px;margin-bottom:12px;box-sizing:border-box;border:2px solid #ddd;border-radius:8px;font-size:1em;font-family:Arial,sans-serif}
 input:focus{outline:none;border-color:#667eea}
 button{cursor:pointer;background:linear-gradient(135deg,#667eea,#764ba2);color:white;font-weight:bold;border:none;margin-top:15px;transition:all 0.3s;font-size:1.05em}
 button:hover{opacity:0.9;transform:translateY(-2px);box-shadow:0 5px 15px rgba(102,126,234,0.3)}
 .result{background:#f4f6ff;padding:15px;border-radius:10px;display:none;margin-top:15px;border-left:4px solid #667eea;animation:slideIn 0.3s}
 .result.show{display:block}
-.result p{margin:12px 0;color:#333;font-size:1.05em}
+.result p{margin:12px 0;color:#333;font-size:1.05em;line-height:1.6}
 .result b{color:#667eea;font-weight:bold}
 .actions{display:flex;gap:10px;margin-top:15px}
 .actions button{width:48%;margin:0;padding:10px;margin-top:0;font-size:0.95em}
@@ -31,26 +33,34 @@ h2{text-align:center;color:#667eea;margin-bottom:30px;font-size:2em}
 </head>
 <body>
 <div class="container">
-<h2>💰 వడ్డీ కాలిక్యులేటర</h2>
+<h2>💰 Interest Calculator | వడ్డీ కాలిక్యులేటర</h2>
 
-<label for="principal">అసలు మొత్తం (₹)</label>
-<input type="number" id="principal" placeholder="అసలు మొత్తం ఎంటర్ చేయండి">
+<label>
+<span class="label-en">Principal Amount</span> | <span class="label-te">అసలు మొత్తం (₹)</span>
+</label>
+<input type="number" id="principal" placeholder="Enter principal amount | అసలు మొత్తం ఎంటర్ చేయండి">
 
-<label for="rate">వడ్డీ (%)</label>
-<input type="number" step="0.01" id="rate" placeholder="వడ్డీ రేట్ ఎంటర్ చేయండి">
+<label>
+<span class="label-en">Rate of Interest</span> | <span class="label-te">వడ్డీ (%)</span>
+</label>
+<input type="number" step="0.01" id="rate" placeholder="Enter interest rate | వడ్డీ రేట్ ఎంటర్ చేయండి">
 
 <div class="date-row">
 <div>
-<label for="startDate">ప్రారంభ తేదీ</label>
+<label>
+<span class="label-en">Start Date</span> | <span class="label-te">ప్రారంభ తేదీ</span>
+</label>
 <input type="date" id="startDate">
 </div>
 <div>
-<label for="endDate">ముగింపు తేదీ</label>
+<label>
+<span class="label-en">End Date</span> | <span class="label-te">ముగింపు తేదీ</span>
+</label>
 <input type="date" id="endDate">
 </div>
 </div>
 
-<button onclick="calculate()">వడ్డీ లెక్కించండి</button>
+<button onclick="calculate()">Calculate Interest | వడ్డీ లెక్కించండి</button>
 
 <div class="result" id="result">
 <p id="duration"></p>
@@ -58,8 +68,8 @@ h2{text-align:center;color:#667eea;margin-bottom:30px;font-size:2em}
 <p id="total"></p>
 
 <div class="actions">
-<button onclick="exportExcel()">📊 Excel రిపోర్ట్</button>
-<button onclick="exportPDF()">🖨️ PDF ప్రింట్</button>
+<button onclick="exportExcel()">📊 Export Excel | Excel రిపోర్ట్</button>
+<button onclick="exportPDF()">🖨️ Export PDF | PDF ప్రింట్</button>
 </div>
 </div>
 </div>
@@ -73,15 +83,15 @@ function calculate(){
  let startVal=document.getElementById('startDate').value;
  let endVal=document.getElementById('endDate').value;
  
- if(!P||P<=0){alert('దయచేసి సరైన అసలు మొత్తం ఎంటర్ చేయండి');return;}
- if(!R||R<0){alert('దయచేసి సరైన వడ్డీ రేట్ ఎంటర్ చేయండి');return;}
- if(!startVal){alert('దయచేసి ప్రారంభ తేదీ ఎంచుకోండి');return;}
- if(!endVal){alert('దయచేసి ముగింపు తేదీ ఎంచుకోండి');return;}
+ if(!P||P<=0){alert('Please enter valid Principal Amount | దయచేసి సరైన అసలు మొత్తం ఎంటర్ చేయండి');return;}
+ if(!R||R<0){alert('Please enter valid Interest Rate | దయచేసి సరైన వడ్డీ రేట్ ఎంటర్ చేయండి');return;}
+ if(!startVal){alert('Please select Start Date | దయచేసి ప్రారంభ తేదీ ఎంచుకోండి');return;}
+ if(!endVal){alert('Please select End Date | దయచేసి ముగింపు తేదీ ఎంచుకోండి');return;}
  
  let start=new Date(startVal);
  let end=new Date(endVal);
 
- if(start>=end){alert('ప్రారంభ తేదీ ముగింపు తేదీ కంటే ముందు ఉండాలి');return;}
+ if(start>=end){alert('Start Date must be before End Date | ప్రారంభ తేదీ ముగింపు తేదీ కంటే ముందు ఉండాలి');return;}
 
  let months=(end.getFullYear()-start.getFullYear())*12+(end.getMonth()-start.getMonth());
  let days=end.getDate()-start.getDate();
@@ -93,26 +103,26 @@ function calculate(){
 
  calcData={P,R,months,days,interest,total};
 
- document.getElementById('duration').innerHTML="<b>కాలవधि:</b> "+months+" నెలలు "+days+" రోజులు";
- document.getElementById('interest').innerHTML="<b>వడ్డీ:</b> ₹"+interest.toFixed(2);
- document.getElementById('total').innerHTML="<b>మొత్తం సొమ్ము:</b> ₹"+total.toFixed(2);
+ document.getElementById('duration').innerHTML="<b>Duration | కాలవధి:</b> "+months+" months "+days+" days | "+months+" నెలలు "+days+" రోజులు";
+ document.getElementById('interest').innerHTML="<b>Interest | వడ్డీ:</b> ₹"+interest.toFixed(2);
+ document.getElementById('total').innerHTML="<b>Total Amount | మొత్తం సొమ్ము:</b> ₹"+total.toFixed(2);
  document.getElementById('result').classList.add('show');
 }
 
 function exportExcel(){
- if(!calcData.P){alert('దయచేసి మొదట వడ్డీ లెక్కించండి');return;}
- let csv="అసలు మొత్తం,వడ్డీ,కాలవधి,వడ్డీ,మొత్తం సొమ్ము\n";
- csv+=`${calcData.P},${calcData.R},${calcData.months} నెలలు ${calcData.days} రోజులు,${calcData.interest.toFixed(2)},${calcData.total.toFixed(2)}`;
+ if(!calcData.P){alert('Please calculate first | దయచేసి మొదట వడ్డీ లెక్కించండి');return;}
+ let csv="Principal Amount,Interest Rate,Duration,Interest Earned,Total Amount\nఅసలు మొత్తం,వడ్డీ రేట్,కాలవధి,వడ్డీ,మొత్తం సొమ్ము\n";
+ csv+=`${calcData.P},${calcData.R},${calcData.months} months ${calcData.days} days,${calcData.interest.toFixed(2)},${calcData.total.toFixed(2)}`;
 
  let blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
  let a=document.createElement('a');
  a.href=URL.createObjectURL(blob);
- a.download='వడ్డీ_లెక్కింపు.csv';
+ a.download='interest_calculation.csv';
  a.click();
 }
 
 function exportPDF(){
- if(!calcData.P){alert('దయచేసి మొదట వడ్డీ లెక్కించండి');return;}
+ if(!calcData.P){alert('Please calculate first | దయచేసి మొదట వడ్డీ లెక్కించండి');return;}
  window.print();
 }
 
