@@ -9,12 +9,12 @@
 <title>Interest Calculator Pro | వడ్డీ కాలిక్యులేటర</title>
 <style>
 body{font-family:Arial,sans-serif;background:linear-gradient(135deg,#667eea,#764ba2);padding:20px;margin:0}
-.container{max-width:600px;margin:auto;background:#fff;padding:25px;border-radius:15px;box-shadow:0 10px 30px rgba(0,0,0,0.2)}
+.container{max-width:800px;margin:auto;background:#fff;padding:25px;border-radius:15px;box-shadow:0 10px 30px rgba(0,0,0,0.2)}
 label{display:block;margin-top:15px;margin-bottom:5px;font-weight:bold;color:#333;font-size:1.05em;line-height:1.4}
 .label-en{color:#667eea;font-size:0.95em;font-weight:bold}
 .label-te{color:#764ba2;font-size:0.95em;font-weight:bold}
-input,button{width:100%;padding:12px;margin-bottom:12px;box-sizing:border-box;border:2px solid #ddd;border-radius:8px;font-size:1em;font-family:Arial,sans-serif}
-input:focus{outline:none;border-color:#667eea}
+input,button,select{width:100%;padding:12px;margin-bottom:12px;box-sizing:border-box;border:2px solid #ddd;border-radius:8px;font-size:1em;font-family:Arial,sans-serif}
+input:focus,select:focus{outline:none;border-color:#667eea}
 button{cursor:pointer;background:linear-gradient(135deg,#667eea,#764ba2);color:white;font-weight:bold;border:none;margin-top:15px;transition:all 0.3s;font-size:1.05em}
 button:hover{opacity:0.9;transform:translateY(-2px);box-shadow:0 5px 15px rgba(102,126,234,0.3)}
 .result{background:#f4f6ff;padding:15px;border-radius:10px;display:none;margin-top:15px;border-left:4px solid #667eea;animation:slideIn 0.3s}
@@ -28,12 +28,49 @@ button:hover{opacity:0.9;transform:translateY(-2px);box-shadow:0 5px 15px rgba(1
 .date-row label{margin-top:0}
 .date-row input{margin-top:5px;margin-bottom:0}
 h2{text-align:center;color:#667eea;margin-bottom:30px;font-size:2em}
+.history-section{margin-top:30px;border-top:2px solid #eee;padding-top:20px}
+.history-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
+.history-header h3{color:#667eea;margin:0;font-size:1.3em}
+.history-list{max-height:600px;overflow-y:auto;border:1px solid #ddd;border-radius:8px;background:#f9f9f9}
+.history-item{padding:12px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:all 0.3s}
+.history-item:hover{background:#f0f0f0}
+.history-item-info{flex:1}
+.history-item-name{font-weight:bold;color:#667eea;font-size:1.05em}
+.history-item-details{color:#666;font-size:0.95em;margin-top:5px}
+.history-item-date{color:#999;font-size:0.9em;margin-top:3px}
+.history-item-actions{display:flex;gap:8px}
+.history-item-actions button{width:auto;padding:8px 12px;margin:0;font-size:0.9em}
+.btn-delete{background:#ff6b6b}
+.btn-delete:hover{opacity:0.8}
+.btn-clear-all{background:#ff6b6b;width:100%;margin-top:10px}
+.history-empty{text-align:center;padding:20px;color:#999}
+.expanded-details{margin-top:10px;padding:10px;background:#fff;border-radius:5px;border-left:3px solid #667eea}
+.expanded-details p{margin:8px 0;font-size:0.95em;color:#333}
+.tabs{display:flex;gap:10px;margin-bottom:15px}
+.tab-btn{flex:1;padding:10px;border:2px solid #ddd;background:#fff;color:#667eea;font-weight:bold;border-radius:8px;cursor:pointer;transition:all 0.3s}
+.tab-btn.active{background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none}
+.tab-content{display:none}
+.tab-content.active{display:block}
 @keyframes slideIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){.actions button{width:47%}.date-row{flex-direction:column}.date-row div{width:100%}.history-item{flex-direction:column;align-items:flex-start}.history-item-actions{width:100%;margin-top:10px}}
 </style>
 </head>
 <body>
 <div class="container">
 <h2>💰 Interest Calculator | వడ్డీ కాలిక్యులేటర</h2>
+
+<!-- TABS -->
+<div class="tabs">
+<button class="tab-btn active" onclick="switchTab('calculator')">🧮 Calculator | కాలిక్యులేటర</button>
+<button class="tab-btn" onclick="switchTab('history')">📋 History | చరిత్ర</button>
+</div>
+
+<!-- CALCULATOR TAB -->
+<div id="calculator" class="tab-content active">
+<label>
+<span class="label-en">Calculation Name</span> | <span class="label-te">పేరు</span>
+</label>
+<input type="text" id="calcName" placeholder="(Optional) My Savings | నా పొదుపు">
 
 <label>
 <span class="label-en">Principal Amount</span> | <span class="label-te">అసలు మొత్తం (₹)</span>
@@ -74,8 +111,136 @@ h2{text-align:center;color:#667eea;margin-bottom:30px;font-size:2em}
 </div>
 </div>
 
+<!-- HISTORY TAB -->
+<div id="history" class="tab-content">
+<div class="history-section">
+<div class="history-header">
+<h3>📋 Calculation History | చరిత్ర</h3>
+<span id="historyCount" style="color:#667eea;font-weight:bold">0 records | రికార్డ్లు</span>
+</div>
+<div class="history-list" id="historyList">
+<div class="history-empty">No calculations yet | ఇంకా లెక్కలు లేవు</div>
+</div>
+<button class="btn-clear-all" onclick="clearAllHistory()">🗑️ Clear All History | అన్నీ తొలగించండి</button>
+<button style="background:#667eea;margin-top:10px;width:100%" onclick="exportHistoryExcel()">📊 Export All History | చరిత్ర Excel</button>
+</div>
+</div>
+
+</div>
+
 <script>
 let calcData={};
+let history=[];
+const MAX_HISTORY=30;
+
+// Load history from localStorage
+function loadHistory(){
+ let saved=localStorage.getItem('calcHistory');
+ history=saved?JSON.parse(saved):[];
+ displayHistory();
+}
+
+// Save to history
+function saveToHistory(){
+ if(!calcData.P) return;
+ 
+ let entry={
+  id:Date.now(),
+  name:document.getElementById('calcName').value||'Unnamed | పేరుహీనం',
+  principal:calcData.P,
+  rate:calcData.R,
+  duration:`${calcData.months} months ${calcData.days} days`,
+  durationTe:`${calcData.months} నెలలు ${calcData.days} రోజులు`,
+  interest:calcData.interest.toFixed(2),
+  total:calcData.total.toFixed(2),
+  timestamp:new Date().toLocaleString('en-IN'),
+  timestampTe:new Date().toLocaleString('te-IN')
+ };
+ 
+ history.unshift(entry);
+ if(history.length>MAX_HISTORY) history.pop();
+ 
+ localStorage.setItem('calcHistory',JSON.stringify(history));
+ displayHistory();
+}
+
+// Display history
+function displayHistory(){
+ let historyList=document.getElementById('historyList');
+ document.getElementById('historyCount').textContent=history.length+' records | రికార్డ్లు';
+ 
+ if(history.length===0){
+  historyList.innerHTML='<div class="history-empty">No calculations yet | ఇంకా లెక్కలు లేవు</div>';
+  return;
+ }
+ 
+ historyList.innerHTML=history.map(item=>`
+  <div class="history-item" onclick="toggleExpand(this)">
+   <div class="history-item-info">
+    <div class="history-item-name">${item.name}</div>
+    <div class="history-item-details">
+     <span class="label-en">₹${item.principal} @ ${item.rate}% = ₹${item.interest}</span> | 
+     <span class="label-te">₹${item.principal} @ ${item.rate}% = ₹${item.interest}</span>
+    </div>
+    <div class="history-item-date">${item.timestamp}</div>
+    <div class="expanded-details" style="display:none">
+     <p><b>Principal | అసలు:</b> ₹${item.principal}</p>
+     <p><b>Rate | వడ్డీ:</b> ${item.rate}%</p>
+     <p><b>Duration | కాలవధి:</b> ${item.duration} | ${item.durationTe}</p>
+     <p><b>Interest | వడ్డీ:</b> ₹${item.interest}</p>
+     <p><b>Total | మొత్తం:</b> ₹${item.total}</p>
+    </div>
+   </div>
+   <div class="history-item-actions">
+    <button class="btn-delete" onclick="deleteHistory(event, ${item.id})">🗑️ Delete | తొలగించు</button>
+   </div>
+  </div>
+ `).join('');
+}
+
+function toggleExpand(element){
+ let details=element.querySelector('.expanded-details');
+ details.style.display=details.style.display==='none'?'block':'none';
+}
+
+function deleteHistory(event, id){
+ event.stopPropagation();
+ history=history.filter(h=>h.id!==id);
+ localStorage.setItem('calcHistory',JSON.stringify(history));
+ displayHistory();
+ alert('Deleted | తొలగించారు');
+}
+
+function clearAllHistory(){
+ if(confirm('Are you sure? | మీరు నిశ్చితమైనారా?\n\nThis will delete all history | ఇది అన్ని చరిత్రను తొలగిస్తుంది')){
+  history=[];
+  localStorage.removeItem('calcHistory');
+  displayHistory();
+  alert('History cleared | చరిత్ర క్లియర్ చేయబడింది');
+ }
+}
+
+function exportHistoryExcel(){
+ if(history.length===0){alert('No history to export | ఎంపిక చేయడానికి చరిత్ర లేదు');return;}
+ 
+ let csv="Calculation Name,Principal,Rate,Duration,Interest,Total,Date\nపేరు,అసలు,వడ్డీ,కాలవధి,వడ్డీ,మొత్తం,తేదీ\n";
+ history.forEach(h=>{
+  csv+=`"${h.name}",${h.principal},${h.rate},"${h.duration}",${h.interest},${h.total},"${h.timestamp}"\n`;
+ });
+ 
+ let blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+ let a=document.createElement('a');
+ a.href=URL.createObjectURL(blob);
+ a.download='interest_history.csv';
+ a.click();
+}
+
+function switchTab(tab){
+ document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+ document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+ document.getElementById(tab).classList.add('active');
+ event.target.classList.add('active');
+}
 
 function calculate(){
  let P=parseFloat(document.getElementById('principal').value);
@@ -107,6 +272,8 @@ function calculate(){
  document.getElementById('interest').innerHTML="<b>Interest | వడ్డీ:</b> ₹"+interest.toFixed(2);
  document.getElementById('total').innerHTML="<b>Total Amount | మొత్తం సొమ్ము:</b> ₹"+total.toFixed(2);
  document.getElementById('result').classList.add('show');
+ 
+ saveToHistory();
 }
 
 function exportExcel(){
@@ -130,6 +297,7 @@ window.addEventListener('load',function(){
  document.getElementById('startDate').value='';
  const today=new Date().toISOString().split('T')[0];
  document.getElementById('endDate').value=today;
+ loadHistory();
 });
 </script>
 </body>
