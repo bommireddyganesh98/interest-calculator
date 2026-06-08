@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interest Calculator Pro</title>
+<style>
+body{font-family:Arial,sans-serif;background:linear-gradient(135deg,#667eea,#764ba2);padding:20px}
+.container{max-width:600px;margin:auto;background:#fff;padding:25px;border-radius:15px}
+input,button{width:100%;padding:12px;margin-top:8px;margin-bottom:12px}
+button{cursor:pointer}
+.result{background:#f4f6ff;padding:15px;border-radius:10px;display:none}
+.actions button{width:49%;display:inline-block}
+</style>
+</head>
+<body>
+<div class="container">
+<h2>💰 Interest Calculator</h2>
+
+<input type="number" id="principal" placeholder="Principal Amount">
+<input type="number" step="0.01" id="rate" placeholder="Rate per ₹100">
+<input type="date" id="startDate">
+<input type="date" id="endDate">
+
+<button onclick="calculate()">Calculate</button>
+
+<div class="result" id="result">
+<p id="duration"></p>
+<p id="interest"></p>
+<p id="total"></p>
+
+<div class="actions">
+<button onclick="exportExcel()">Export Excel</button>
+<button onclick="exportPDF()">Export PDF</button>
+</div>
+</div>
+</div>
+
+<script>
+let calcData={};
+
+function calculate(){
+ let P=parseFloat(document.getElementById('principal').value);
+ let R=parseFloat(document.getElementById('rate').value);
+ let start=new Date(document.getElementById('startDate').value);
+ let end=document.getElementById('endDate').value ?
+         new Date(document.getElementById('endDate').value) : new Date();
+
+ let months=(end.getFullYear()-start.getFullYear())*12+(end.getMonth()-start.getMonth());
+ let days=end.getDate()-start.getDate();
+ if(days<0){months--;days+=30;}
+
+ let monthInterest=(P*R)/100;
+ let interest=(monthInterest*months)+((monthInterest/30)*days);
+ let total=P+interest;
+
+ calcData={P,R,months,days,interest,total};
+
+ document.getElementById('duration').innerHTML="<b>Duration:</b> "+months+" months "+days+" days";
+ document.getElementById('interest').innerHTML="<b>Interest:</b> ₹"+interest.toFixed(2);
+ document.getElementById('total').innerHTML="<b>Total Amount:</b> ₹"+total.toFixed(2);
+ document.getElementById('result').style.display='block';
+}
+
+function exportExcel(){
+ let csv="Principal,Rate,Duration,Interest,Total Amount\n";
+ csv+=`${calcData.P},${calcData.R},${calcData.months} months ${calcData.days} days,${calcData.interest.toFixed(2)},${calcData.total.toFixed(2)}`;
+
+ let blob=new Blob([csv],{type:'text/csv'});
+ let a=document.createElement('a');
+ a.href=URL.createObjectURL(blob);
+ a.download='interest_calculation.csv';
+ a.click();
+}
+
+function exportPDF(){
+ window.print();
+}
+</script>
+</body>
+</html>
