@@ -7,23 +7,43 @@
 <style>
 body{font-family:Arial,sans-serif;background:linear-gradient(135deg,#667eea,#764ba2);padding:20px}
 .container{max-width:600px;margin:auto;background:#fff;padding:25px;border-radius:15px}
-input,button{width:100%;padding:12px;margin-top:8px;margin-bottom:12px;box-sizing:border-box;border:1px solid #ccc;border-radius:5px;font-size:1em}
-button{cursor:pointer;background:linear-gradient(135deg,#667eea,#764ba2);color:white;font-weight:bold;border:none}
-button:hover{opacity:0.9}
-.result{background:#f4f6ff;padding:15px;border-radius:10px;display:none;margin-top:15px}
+label{display:block;margin-top:15px;margin-bottom:5px;font-weight:bold;color:#333}
+input,button{width:100%;padding:12px;margin-top:0px;margin-bottom:12px;box-sizing:border-box;border:1px solid #ccc;border-radius:5px;font-size:1em}
+button{cursor:pointer;background:linear-gradient(135deg,#667eea,#764ba2);color:white;font-weight:bold;border:none;margin-top:15px}
+button:hover{opacity:0.9;transform:translateY(-2px)}
+.result{background:#f4f6ff;padding:15px;border-radius:10px;display:none;margin-top:15px;border-left:4px solid #667eea}
 .result.show{display:block}
+.result p{margin:10px 0;color:#333}
+.result b{color:#667eea}
 .actions{display:flex;gap:10px;margin-top:15px}
-.actions button{width:48%;margin:0;padding:10px}
+.actions button{width:48%;margin:0;padding:10px;margin-top:0}
+.date-row{display:flex;gap:15px}
+.date-row div{flex:1}
+.date-row label{margin-top:0}
+.date-row input{margin-top:0}
+h2{text-align:center;color:#667eea}
 </style>
 </head>
 <body>
 <div class="container">
 <h2>💰 Interest Calculator</h2>
 
-<input type="number" id="principal" placeholder="Principal Amount">
-<input type="number" step="0.01" id="rate" placeholder="Rate per ₹100">
+<label for="principal">Principal Amount</label>
+<input type="number" id="principal" placeholder="Enter principal amount">
+
+<label for="rate">Rate per ₹100</label>
+<input type="number" step="0.01" id="rate" placeholder="Enter rate">
+
+<div class="date-row">
+<div>
+<label for="startDate">Start Date</label>
 <input type="date" id="startDate">
+</div>
+<div>
+<label for="endDate">End Date</label>
 <input type="date" id="endDate">
+</div>
+</div>
 
 <button onclick="calculate()">Calculate</button>
 
@@ -46,12 +66,12 @@ function calculate(){
  let P=parseFloat(document.getElementById('principal').value);
  let R=parseFloat(document.getElementById('rate').value);
  let start=new Date(document.getElementById('startDate').value);
- let end=document.getElementById('endDate').value ?
-         new Date(document.getElementById('endDate').value) : new Date();
+ let end=new Date(document.getElementById('endDate').value);
 
  if(!P||P<=0){alert('Please enter valid Principal');return;}
  if(!R||R<0){alert('Please enter valid Rate');return;}
- if(!start){alert('Please select Start Date');return;}
+ if(!document.getElementById('startDate').value){alert('Please select Start Date');return;}
+
  if(start>=end){alert('Start Date must be before End Date');return;}
 
  let months=(end.getFullYear()-start.getFullYear())*12+(end.getMonth()-start.getMonth());
@@ -88,8 +108,12 @@ function exportPDF(){
 }
 
 document.addEventListener('DOMContentLoaded',()=>{
+ // Start Date - Empty
+ document.getElementById('startDate').value='';
+ 
+ // End Date - Default to today
  const today=new Date().toISOString().split('T')[0];
- document.getElementById('startDate').value=today;
+ document.getElementById('endDate').value=today;
 });
 </script>
 </body>
